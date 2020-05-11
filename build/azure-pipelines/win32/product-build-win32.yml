@@ -232,6 +232,12 @@ steps:
   displayName: Import ESRP Auth Certificate
 
 - powershell: |
+    $AppRoot = "$(agent.builddirectory)\VSCode-win32-$(VSCODE_ARCH)"
+    $AppProductJson = Get-Content -Raw -Path "$AppRoot\resources\app\product.json" | ConvertFrom-Json
+    exec { $AppRoot\bin\$AppProductJson.applicationName --version }
+  displayName: Verify start after signing
+
+- powershell: |
     . build/azure-pipelines/win32/exec.ps1
     $ErrorActionPreference = "Stop"
     $env:AZURE_STORAGE_ACCESS_KEY_2 = "$(vscode-storage-key)"
